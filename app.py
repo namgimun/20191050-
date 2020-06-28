@@ -50,7 +50,9 @@ def login():
         passward = request.form['passward']
         print (id,type(id))
         print (passward,type(passward))
-        if id =="abc" and passward =='1234': 
+
+        ret = dbdb.select_user(id, passward)
+        if ret != None:
             return "안녕하세요~ {} 님".format(id)
         else:
             return "아이디 또는 패스워드를 확인 하세요."
