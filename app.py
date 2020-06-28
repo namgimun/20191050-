@@ -7,7 +7,7 @@ import dbdb
 
 @app.route('/')
 def index():
-    return '메인페이지'
+    return render_template('main.html')
 
 @app.route('/hello')
 def hello():
@@ -52,10 +52,32 @@ def login():
         print (passward,type(passward))
 
         ret = dbdb.select_user(id, passward)
+        print(ret[2])
         if ret != None:
-            return "안녕하세요~ {} 님".format(id)
+            return "안녕하세요~ {} 님".format(ret[2])
         else:
             return "아이디 또는 패스워드를 확인 하세요."
+
+# 회원가입
+@app.route('/join',  methods=['GET', 'POST'])
+def join():
+    if request.method == 'GET':
+        return render_template('join.html')
+    else:
+        id = request.form['id']
+        passward = request.form['passward']
+        name = request.form['name']
+        print (id,type(id))
+        print (passward,type(passward))
+        ret = dbdb.check_id(id)
+        if ret != None:
+            return '''
+                    <script>alert('다른아이디를 사용하세요');
+                    location.href='/join';
+            '''
+
+        dbdb.insert_user(id, passward)
+        return redirect(url_for('login'))
 
 @app.route('/getinfo')
 def getinfo():
@@ -75,25 +97,6 @@ def method():
         print(num, name)
         dbdb.insert_data(num, name)
         return 'POST 이다. 학번은: {} 이름은: {}'.format(num, name)
-
-@app.route('/naver')
-def naver():
-    return redirect("http://www.naver.com/")
-
-@app.route('/kakao')
-def daum():
-    return redirect("http://www.daum.net/")
-
-@app.route('/urltest')
-def url_test():
-    return redirect(url_for('daum'))
-
-@app.route('/movenaver/<site>')
-def movenaver_site(site):
-    if site == 'naver':
-        return redirect(url_for('naver'))
-    elif site == 'daum':
-        return redirect(url_for('daum'))
 
 @app.route('/img')
 def image():
