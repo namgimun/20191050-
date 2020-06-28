@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, url_for
+from flask import Flask, request, render_template, url_for, redirect
 app = Flask(__name__)
 
 @app.route('/')
@@ -73,8 +73,8 @@ def movenaver_site(site):
         return redirect(url_for('daum'))
 
 @app.route('/img')
-def naver():
-    return rander_template("image.html")
+def image():
+    return render_template("image.html")
 
 
 if __name__ == '__main__':
